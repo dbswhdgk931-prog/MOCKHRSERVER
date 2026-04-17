@@ -35,9 +35,6 @@ app = FastAPI(
     title="Mock HR API",
     description="SK케미칼 HR Data 원큐 Agent 프로토타입용 Mock 인사 시스템 API",
     version="2.0.0",
-    servers=[
-        {"url": "http://localhost:8000", "description": "로컬 개발"},
-    ],
 )
 
 app.add_middleware(
