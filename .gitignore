@@ -1,0 +1,5 @@
+data/hr_data.db
+__pycache__/
+*.pyc
+.claude/
+~$*.xlsx
