@@ -21,6 +21,7 @@ from datetime import datetime, timezone
 
 import db
 from models import (
+    EmployeeBasicListResponse, EmployeeBasicSingleResponse,
     EmployeeListResponse, EmployeeSingleResponse,
     EvaluationListResponse, EvaluationSingleResponse,
     EducationListResponse, CareerListResponse,
@@ -66,12 +67,43 @@ def startup_check():
 # ---- inHR API: 기본 인적정보 ----
 
 @app.get(
+    "/api/v1/inhr/employees/basic",
+    response_model=EmployeeBasicListResponse,
+    response_model_by_alias=True,
+    summary="전체 임직원 기본 인적정보 조회",
+    description="01_Employee.xlsx 기반 기본정보만 반환 (nested 데이터 미포함)",
+    tags=["inHR - 기본인적정보"],
+)
+def get_employees_basic():
+    """기본 인적정보만 (학력/경력 등 nested 데이터 미포함)"""
+    employees = db.get_all_employees_basic()
+    return EmployeeBasicListResponse(data=employees, count=len(employees))
+
+
+@app.get(
+    "/api/v1/inhr/employees/basic/{employee_id}",
+    response_model=EmployeeBasicSingleResponse,
+    response_model_by_alias=True,
+    summary="특정 임직원 기본 인적정보 조회",
+    tags=["inHR - 기본인적정보"],
+)
+def get_employee_basic_by_id(employee_id: str):
+    """사번으로 특정 임직원 기본정보 조회 (nested 미포함)"""
+    emp = db.get_employee_basic_by_id(employee_id)
+    if emp is None:
+        return EmployeeBasicSingleResponse(error=f"Employee {employee_id} not found")
+    return EmployeeBasicSingleResponse(data=emp)
+
+
+# ---- inHR API: 전체 인적정보 ----
+
+@app.get(
     "/api/v1/inhr/employees",
     response_model=EmployeeListResponse,
     response_model_by_alias=True,
-    summary="전체 임직원 기본정보 조회 (Delta 지원)",
-    description="modifiedAfter 파라미터로 특정 시각 이후 변경된 임직원만 필터링 가능",
-    tags=["inHR - 기본인적정보"],
+    summary="전체 임직원 전체인적정보 조회 (Delta 지원)",
+    description="기본정보 + 학력/경력/해외경험/가족/자격 모두 포함. modifiedAfter 파라미터로 Delta Sync 가능",
+    tags=["inHR - 전체인적정보"],
 )
 def get_employees(
     modifiedAfter: Optional[str] = Query(
@@ -88,11 +120,11 @@ def get_employees(
     "/api/v1/inhr/employees/{employee_id}",
     response_model=EmployeeSingleResponse,
     response_model_by_alias=True,
-    summary="특정 임직원 기본정보 조회",
-    tags=["inHR - 기본인적정보"],
+    summary="특정 임직원 전체인적정보 조회",
+    tags=["inHR - 전체인적정보"],
 )
 def get_employee_by_id(employee_id: str):
-    """사번으로 특정 임직원 조회"""
+    """사번으로 특정 임직원 전체정보 조회 (nested 포함)"""
     emp = db.get_employee_by_id(employee_id)
     if emp is None:
         return EmployeeSingleResponse(error=f"Employee {employee_id} not found")

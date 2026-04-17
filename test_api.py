@@ -32,6 +32,50 @@ def section(title):
 
 
 # ═══════════════════════════════════════════════════════
+section("0-1. GET /api/v1/inhr/employees/basic (기본 인적정보 전체)")
+r = client.get("/api/v1/inhr/employees/basic")
+d = r.json()
+check("status 200", r.status_code == 200)
+check("count=10", d["count"] == 10)
+e0 = d["data"][0]
+check("has employeeId", "employeeId" in e0)
+check("has name", "name" in e0)
+check("has department", "department" in e0)
+check("has grade", "grade" in e0)
+check("has tenure", "tenure" in e0)
+check("has lastModified", "lastModified" in e0)
+check("NO educations", "educations" not in e0)
+check("NO careers", "careers" not in e0)
+check("NO overseasExperiences", "overseasExperiences" not in e0)
+check("NO family", "family" not in e0)
+check("NO certifications", "certifications" not in e0)
+for e in d["data"]:
+    print(f'  {e["employeeId"]} {e["name"]:6s} dept={e["department"]:16s} grade={e["grade"]} tenure={e["tenure"]}')
+
+# ═══════════════════════════════════════════════════════
+section("0-2. GET /api/v1/inhr/employees/basic/EMP001")
+r = client.get("/api/v1/inhr/employees/basic/EMP001")
+d = r.json()
+e = d["data"]
+check("status 200", r.status_code == 200)
+check("employeeId=EMP001", e["employeeId"] == "EMP001")
+check("name=김철수", e["name"] == "김철수")
+check("department", e["department"] == "People Development팀")
+check("grade=M2", e["grade"] == "M2")
+check("tenure=12", e["tenure"] == 12)
+check("managerId=EMP010", e["managerId"] == "EMP010")
+check("NO nested keys", "educations" not in e and "careers" not in e)
+print(json.dumps(d, indent=2, ensure_ascii=False))
+
+# ═══════════════════════════════════════════════════════
+section("0-3. GET /api/v1/inhr/employees/basic/EMP999 (not found)")
+r = client.get("/api/v1/inhr/employees/basic/EMP999")
+d = r.json()
+check("status 200", r.status_code == 200)
+check("data=null", d["data"] is None)
+check("error present", "EMP999" in d.get("error", ""))
+
+# ═══════════════════════════════════════════════════════
 section("1. GET /api/v1/health")
 r = client.get("/api/v1/health")
 d = r.json()

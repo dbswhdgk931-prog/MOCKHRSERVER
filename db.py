@@ -8,7 +8,7 @@ import sqlite3
 from datetime import datetime
 
 from models import (
-    Employee, Education, Career, OverseasExperience, Family, Certification,
+    Employee, EmployeeBasic, Education, Career, OverseasExperience, Family, Certification,
     EmployeeEvaluation, EvaluationYear, EvalComment, LeadershipSurvey,
     EducationWithEmployee, CareerWithEmployee, OverseasExpWithEmployee,
     FamilyWithEmployee, CertificationWithEmployee,
@@ -29,7 +29,45 @@ def db_exists() -> bool:
     return os.path.exists(DB_PATH)
 
 
-# ── Employee 관련 ─────────────────────────────────────────────
+# ── Employee Basic (nested 없음) ──────────────────────────────
+
+def _build_employee_basic(row: sqlite3.Row) -> EmployeeBasic:
+    return EmployeeBasic(
+        employee_id=row["employee_id"],
+        name=row["name"],
+        birth_date=row["birth_date"] or "",
+        department=row["department"] or "",
+        position=row["position"] or "",
+        grade=row["grade"] or "",
+        tenure=row["tenure"] or 0,
+        promotion_date=row["promotion_date"] or "",
+        photo_url=row["photo_url"] or "",
+        manager_id=row["manager_id"] or "",
+        last_modified=row["last_modified"],
+    )
+
+
+def get_all_employees_basic() -> list[EmployeeBasic]:
+    conn = get_connection()
+    try:
+        rows = conn.execute("SELECT * FROM employee ORDER BY employee_id").fetchall()
+        return [_build_employee_basic(r) for r in rows]
+    finally:
+        conn.close()
+
+
+def get_employee_basic_by_id(employee_id: str) -> EmployeeBasic | None:
+    conn = get_connection()
+    try:
+        row = conn.execute("SELECT * FROM employee WHERE employee_id = ?", (employee_id,)).fetchone()
+        if row is None:
+            return None
+        return _build_employee_basic(row)
+    finally:
+        conn.close()
+
+
+# ── Employee 전체 (nested 포함) ───────────────────────────────
 
 def _build_employee(row: sqlite3.Row, conn: sqlite3.Connection) -> Employee:
     eid = row["employee_id"]

@@ -48,9 +48,43 @@ python import_data.py
 
 ### inHR — 기본 인적정보
 
+#### `GET /api/v1/inhr/employees/basic`
+
+전체 임직원 기본 인적정보 조회 (01_Employee.xlsx 기반, nested 데이터 미포함).
+
+**응답 예시:**
+```json
+{
+  "data": [
+    {
+      "employeeId": "EMP001",
+      "name": "김철수",
+      "birthDate": "1985-03-15",
+      "department": "People Development팀",
+      "position": "매니저",
+      "grade": "M2",
+      "tenure": 12,
+      "promotionDate": "2022-01-01",
+      "photoUrl": "https://sp.example.com/photos/emp001.jpg",
+      "managerId": "EMP010",
+      "lastModified": "2026-04-17T06:00:30Z"
+    }
+  ],
+  "count": 10
+}
+```
+
+#### `GET /api/v1/inhr/employees/basic/{employee_id}`
+
+특정 임직원 기본 인적정보 조회.
+
+---
+
+### inHR — 전체 인적정보
+
 #### `GET /api/v1/inhr/employees`
 
-전체 임직원 기본정보 조회. 교육/경력/해외경험/가족/자격 nested 포함.
+전체 임직원 전체인적정보 조회. 기본정보 + 교육/경력/해외경험/가족/자격 nested 포함.
 
 | 파라미터 | 타입 | 설명 |
 |---|---|---|
@@ -107,7 +141,7 @@ GET /api/v1/inhr/employees?modifiedAfter=2026-04-17T00:00:00Z
 
 #### `GET /api/v1/inhr/employees/{employee_id}`
 
-특정 임직원 기본정보 조회.
+특정 임직원 전체인적정보 조회.
 
 **응답 예시:**
 ```json
@@ -328,12 +362,19 @@ GET /api/v1/inhr/employees?modifiedAfter=2026-04-17T00:00:00Z
 
 ## 엔드포인트 요약
 
-### inHR — 기본 인적정보 (nested)
+### inHR — 기본 인적정보
+
+| Method | Path | 설명 | 건수 |
+|---|---|---|---|
+| GET | `/api/v1/inhr/employees/basic` | 전체 직원 기본정보 (nested 미포함) | 10 |
+| GET | `/api/v1/inhr/employees/basic/{id}` | 특정 직원 기본정보 | 1 |
+
+### inHR — 전체 인적정보 (nested)
 
 | Method | Path | 설명 | 건수 |
 |---|---|---|---|
 | GET | `/api/v1/inhr/employees` | 전체 직원 (교육/경력/해외/가족/자격 nested) | 10 |
-| GET | `/api/v1/inhr/employees/{id}` | 특정 직원 상세 | 1 |
+| GET | `/api/v1/inhr/employees/{id}` | 특정 직원 전체정보 | 1 |
 
 ### inHR — 개별 리소스 조회
 

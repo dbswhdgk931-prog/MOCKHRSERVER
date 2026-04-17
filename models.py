@@ -59,7 +59,25 @@ class Certification(BaseModel):
     expiry_date: str = Field("", serialization_alias="expiryDate")
 
 
+class EmployeeBasic(BaseModel):
+    """기본 인적정보 (01_Employee.xlsx 1:1 매핑, nested 없음)"""
+    model_config = ConfigDict(populate_by_name=True)
+
+    employee_id: str = Field(serialization_alias="employeeId")
+    name: str = Field(serialization_alias="name")
+    birth_date: str = Field(serialization_alias="birthDate")
+    department: str = Field(serialization_alias="department")
+    position: str = Field(serialization_alias="position")
+    grade: str = Field(serialization_alias="grade")
+    tenure: int = Field(serialization_alias="tenure")
+    promotion_date: str = Field(serialization_alias="promotionDate")
+    photo_url: str = Field(serialization_alias="photoUrl")
+    manager_id: str = Field("", serialization_alias="managerId")
+    last_modified: str = Field(serialization_alias="lastModified")
+
+
 class Employee(BaseModel):
+    """전체 인적정보 (기본정보 + 학력/경력/해외/가족/자격 nested)"""
     model_config = ConfigDict(populate_by_name=True)
 
     employee_id: str = Field(serialization_alias="employeeId")
@@ -177,6 +195,18 @@ class EmployeeEvaluation(BaseModel):
 
 
 # --- 응답 envelope ---
+
+class EmployeeBasicListResponse(BaseModel):
+    data: list[EmployeeBasic]
+    count: int
+
+    model_config = ConfigDict(populate_by_name=True)
+
+
+class EmployeeBasicSingleResponse(BaseModel):
+    data: Optional[EmployeeBasic] = None
+    error: Optional[str] = None
+
 
 class EmployeeListResponse(BaseModel):
     data: list[Employee]
