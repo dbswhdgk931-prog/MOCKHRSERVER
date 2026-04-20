@@ -98,6 +98,13 @@ def _convert_schema(schema):
         else:
             result[key] = value
 
+    # Swagger 2.0 / Power Platform: integer·number에 format 필수
+    _type = result.get("type")
+    if _type == "integer" and "format" not in result:
+        result["format"] = "int32"
+    elif _type == "number" and "format" not in result:
+        result["format"] = "double"
+
     return result
 
 

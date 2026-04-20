@@ -538,7 +538,8 @@
         },
         "count": {
           "type": "integer",
-          "title": "Count"
+          "title": "Count",
+          "format": "int32"
         }
       },
       "type": "object",
@@ -649,7 +650,8 @@
         },
         "count": {
           "type": "integer",
-          "title": "Count"
+          "title": "Count",
+          "format": "int32"
         }
       },
       "type": "object",
@@ -718,7 +720,8 @@
         },
         "gradYear": {
           "type": "integer",
-          "title": "Gradyear"
+          "title": "Gradyear",
+          "format": "int32"
         }
       },
       "type": "object",
@@ -741,7 +744,8 @@
         },
         "count": {
           "type": "integer",
-          "title": "Count"
+          "title": "Count",
+          "format": "int32"
         }
       },
       "type": "object",
@@ -771,7 +775,8 @@
         },
         "gradYear": {
           "type": "integer",
-          "title": "Gradyear"
+          "title": "Gradyear",
+          "format": "int32"
         }
       },
       "type": "object",
@@ -812,7 +817,8 @@
         },
         "tenure": {
           "type": "integer",
-          "title": "Tenure"
+          "title": "Tenure",
+          "format": "int32"
         },
         "promotionDate": {
           "type": "string",
@@ -911,7 +917,8 @@
         },
         "tenure": {
           "type": "integer",
-          "title": "Tenure"
+          "title": "Tenure",
+          "format": "int32"
         },
         "promotionDate": {
           "type": "string",
@@ -958,7 +965,8 @@
         },
         "count": {
           "type": "integer",
-          "title": "Count"
+          "title": "Count",
+          "format": "int32"
         }
       },
       "type": "object",
@@ -1017,7 +1025,8 @@
         },
         "count": {
           "type": "integer",
-          "title": "Count"
+          "title": "Count",
+          "format": "int32"
         },
         "deltaFrom": {
           "type": "string",
@@ -1078,7 +1087,8 @@
         },
         "count": {
           "type": "integer",
-          "title": "Count"
+          "title": "Count",
+          "format": "int32"
         },
         "deltaFrom": {
           "type": "string",
@@ -1109,7 +1119,8 @@
       "properties": {
         "year": {
           "type": "integer",
-          "title": "Year"
+          "title": "Year",
+          "format": "int32"
         },
         "performanceGrade": {
           "type": "string",
@@ -1150,6 +1161,7 @@
         },
         "birthYear": {
           "type": "integer",
+          "format": "int32",
           "title": "Birthyear"
         },
         "education": {
@@ -1181,7 +1193,8 @@
         },
         "count": {
           "type": "integer",
-          "title": "Count"
+          "title": "Count",
+          "format": "int32"
         }
       },
       "type": "object",
@@ -1207,6 +1220,7 @@
         },
         "birthYear": {
           "type": "integer",
+          "format": "int32",
           "title": "Birthyear"
         },
         "education": {
@@ -1249,7 +1263,8 @@
         },
         "score": {
           "type": "number",
-          "title": "Score"
+          "title": "Score",
+          "format": "double"
         },
         "strengthComment": {
           "type": "string",
@@ -1280,7 +1295,8 @@
         },
         "count": {
           "type": "integer",
-          "title": "Count"
+          "title": "Count",
+          "format": "int32"
         }
       },
       "type": "object",
