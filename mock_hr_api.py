@@ -14,12 +14,14 @@
 ===============================================================
 """
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from typing import Optional
 from datetime import datetime, timezone
 
 import db
+from swagger2_converter import convert_openapi3_to_swagger2
 from models import (
     EmployeeBasicListResponse, EmployeeBasicSingleResponse,
     EmployeeListResponse, EmployeeSingleResponse,
@@ -302,6 +304,21 @@ def get_evaluation_by_id(employee_id: str):
     if ev is None:
         return EvaluationSingleResponse(error=f"Evaluation data for {employee_id} not found")
     return EvaluationSingleResponse(data=ev)
+
+
+# ---- Swagger 2.0 (OpenAPI 2.0) ----
+
+@app.get(
+    "/swagger.json",
+    include_in_schema=False,
+    summary="Swagger 2.0 스펙 다운로드",
+)
+def get_swagger2(request: Request):
+    """OpenAPI 3.1 스펙을 Swagger 2.0 (OpenAPI 2.0) 형식으로 변환하여 반환"""
+    openapi_spec = app.openapi()
+    host = request.headers.get("host", "localhost:8000")
+    swagger2 = convert_openapi3_to_swagger2(openapi_spec, host=host)
+    return JSONResponse(content=swagger2)
 
 
 # ---- 유틸리티 ----
