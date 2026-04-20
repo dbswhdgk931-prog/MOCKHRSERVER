@@ -102,7 +102,8 @@ def _convert_schema(schema):
     _type = result.get("type")
     if _type == "integer" and "format" not in result:
         result["format"] = "int32"
-    elif _type == "number" and "format" not in result:
+    elif _type == "number":
+        # Power Platform은 number에 double만 허용 (float 불가)
         result["format"] = "double"
 
     return result
