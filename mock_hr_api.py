@@ -14,14 +14,18 @@
 ===============================================================
 """
 
+import copy
+
 from fastapi import FastAPI, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.responses import JSONResponse
 from typing import Optional
 from datetime import datetime, timezone
 
 import db
 from swagger2_converter import convert_openapi3_to_swagger2
+from v2_app import v2_app
 from models import (
     EmployeeBasicListResponse, EmployeeBasicSingleResponse,
     EmployeeListResponse, EmployeeSingleResponse,
@@ -318,6 +322,46 @@ def get_swagger2(request: Request):
     openapi_spec = app.openapi()
     host = request.headers.get("host", "localhost:8000")
     swagger2 = convert_openapi3_to_swagger2(openapi_spec, host=host)
+    return JSONResponse(content=swagger2)
+
+
+# ---- v2 Sub-App 마운트 ----
+
+app.mount("/api/v2", v2_app)
+
+
+@app.get("/docs/v2", include_in_schema=False)
+def v2_swagger_ui():
+    """v2 전용 Swagger UI"""
+    return get_swagger_ui_html(
+        openapi_url="/openapi/v2.json",
+        title="Mock HR API v2 (Flattened) - Swagger UI",
+    )
+
+
+@app.get("/openapi/v2.json", include_in_schema=False)
+def v2_openapi():
+    """v2 OpenAPI 3.1 스펙 (경로 prefix 보정 포함)"""
+    spec = copy.deepcopy(v2_app.openapi())
+    # sub-app 경로에 마운트 prefix 추가
+    new_paths = {}
+    for path, path_item in spec.get("paths", {}).items():
+        new_paths[f"/api/v2{path}"] = path_item
+    spec["paths"] = new_paths
+    return JSONResponse(content=spec)
+
+
+@app.get("/swagger/v2.json", include_in_schema=False)
+def v2_swagger2(request: Request):
+    """v2 Swagger 2.0 스펙"""
+    spec = copy.deepcopy(v2_app.openapi())
+    # sub-app 경로에 마운트 prefix 추가
+    new_paths = {}
+    for path, path_item in spec.get("paths", {}).items():
+        new_paths[f"/api/v2{path}"] = path_item
+    spec["paths"] = new_paths
+    host = request.headers.get("host", "localhost:8000")
+    swagger2 = convert_openapi3_to_swagger2(spec, host=host)
     return JSONResponse(content=swagger2)
 
 
