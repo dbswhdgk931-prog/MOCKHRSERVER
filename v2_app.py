@@ -11,8 +11,8 @@ from v2_models import EmployeeFlatV2Response, EvaluationFlatV2Response
 from v2_flatten import flatten_employee, flatten_evaluation
 
 v2_app = FastAPI(
-    title="Mock HR API v2 (Flattened)",
-    description="평탄화된 HR 데이터 API — Copilot Studio / Power Automate에서 전처리 없이 바로 사용",
+    title="Mock HR API v2",
+    description="HR 데이터 API v2 — Copilot Studio / Power Automate용",
     version="2.0.0",
     docs_url=None,
     redoc_url=None,
@@ -31,9 +31,9 @@ v2_app.add_middleware(
     "/inhr/employees/{employee_id}",
     response_model=EmployeeFlatV2Response,
     response_model_by_alias=True,
-    summary="특정 임직원 평탄화 인적정보 조회",
-    description="기본정보 + 학력/경력/해외경험/가족/자격을 문자열로 평탄화하여 반환",
-    tags=["v2 inHR - 평탄화 인적정보"],
+    summary="특정 임직원 인적정보 조회",
+    description="기본정보 + 학력/경력/해외경험/가족/자격 포함",
+    tags=["v2 inHR - 인적정보"],
 )
 def get_employee_flat(employee_id: str):
     """사번으로 특정 임직원의 평탄화된 전체정보 조회"""
@@ -47,9 +47,9 @@ def get_employee_flat(employee_id: str):
     "/myhr/evaluations/{employee_id}",
     response_model=EvaluationFlatV2Response,
     response_model_by_alias=True,
-    summary="특정 임직원 평탄화 평가정보 조회",
-    description="최근 3년치 평가/리더십 데이터를 N/N1/N2 접미사로 평탄화하여 반환",
-    tags=["v2 myHR - 평탄화 평가정보"],
+    summary="특정 임직원 평가정보 조회",
+    description="최근 3년치 평가/리더십 데이터 조회",
+    tags=["v2 myHR - 평가정보"],
 )
 def get_evaluation_flat(employee_id: str):
     """사번으로 특정 임직원의 평탄화된 평가 데이터 조회"""

@@ -335,7 +335,7 @@ def v2_swagger_ui():
     """v2 전용 Swagger UI"""
     return get_swagger_ui_html(
         openapi_url="/openapi/v2.json",
-        title="Mock HR API v2 (Flattened) - Swagger UI",
+        title="Mock HR API v2 - Swagger UI",
     )
 
 
