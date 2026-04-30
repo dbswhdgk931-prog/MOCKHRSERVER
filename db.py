@@ -57,6 +57,7 @@ def get_all_employees_basic() -> list[EmployeeBasic]:
 
 
 def get_employee_basic_by_id(employee_id: str) -> EmployeeBasic | None:
+    employee_id = employee_id.upper()
     conn = get_connection()
     try:
         row = conn.execute("SELECT * FROM employee WHERE employee_id = ?", (employee_id,)).fetchone()
@@ -148,6 +149,7 @@ def get_all_employees(modified_after: str | None = None) -> list[Employee]:
 
 
 def get_employee_by_id(employee_id: str) -> Employee | None:
+    employee_id = employee_id.upper()
     conn = get_connection()
     try:
         row = conn.execute("SELECT * FROM employee WHERE employee_id = ?", (employee_id,)).fetchone()
@@ -180,7 +182,7 @@ def get_all_educations() -> list[EducationWithEmployee]:
 
 
 def get_educations_by_employee(employee_id: str) -> list[EducationWithEmployee]:
-    return _edu_query("WHERE employee_id = ?", (employee_id,))
+    return _edu_query("WHERE employee_id = ?", (employee_id.upper(),))
 
 
 def _career_query(where: str = "", params: tuple = ()) -> list[CareerWithEmployee]:
@@ -206,7 +208,7 @@ def get_all_careers() -> list[CareerWithEmployee]:
 
 
 def get_careers_by_employee(employee_id: str) -> list[CareerWithEmployee]:
-    return _career_query("WHERE employee_id = ?", (employee_id,))
+    return _career_query("WHERE employee_id = ?", (employee_id.upper(),))
 
 
 def _overseas_query(where: str = "", params: tuple = ()) -> list[OverseasExpWithEmployee]:
@@ -229,7 +231,7 @@ def get_all_overseas() -> list[OverseasExpWithEmployee]:
 
 
 def get_overseas_by_employee(employee_id: str) -> list[OverseasExpWithEmployee]:
-    return _overseas_query("WHERE employee_id = ?", (employee_id,))
+    return _overseas_query("WHERE employee_id = ?", (employee_id.upper(),))
 
 
 def _family_query(where: str = "", params: tuple = ()) -> list[FamilyWithEmployee]:
@@ -253,7 +255,7 @@ def get_all_family() -> list[FamilyWithEmployee]:
 
 
 def get_family_by_employee(employee_id: str) -> list[FamilyWithEmployee]:
-    return _family_query("WHERE employee_id = ?", (employee_id,))
+    return _family_query("WHERE employee_id = ?", (employee_id.upper(),))
 
 
 def _cert_query(where: str = "", params: tuple = ()) -> list[CertificationWithEmployee]:
@@ -278,7 +280,7 @@ def get_all_certifications() -> list[CertificationWithEmployee]:
 
 
 def get_certifications_by_employee(employee_id: str) -> list[CertificationWithEmployee]:
-    return _cert_query("WHERE employee_id = ?", (employee_id,))
+    return _cert_query("WHERE employee_id = ?", (employee_id.upper(),))
 
 
 # ── Evaluation 관련 ───────────────────────────────────────────
@@ -367,6 +369,7 @@ def get_all_evaluations(modified_after: str | None = None) -> list[EmployeeEvalu
 
 
 def get_evaluation_by_employee(employee_id: str) -> EmployeeEvaluation | None:
+    employee_id = employee_id.upper()
     conn = get_connection()
     try:
         return _build_evaluation(employee_id, conn)
